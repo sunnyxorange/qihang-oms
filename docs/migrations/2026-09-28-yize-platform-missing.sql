@@ -8,6 +8,7 @@
 --   * IF NOT EXISTS for safe re-apply
 --   * oms_tao_order_promotion: official DDL lacks PRIMARY KEY; add PK(id) for InnoDB
 --   * tmall_coupon_fee present on TaoOrder entity; add if absent in source DDL
+--   * oms_tao_goods_sku: entity uses erp_goods_id/erp_goods_sku_id/shop_id/update_time (cb-erp had o_goods_*)
 --   * erp_bill_* / o_order_ship_list* NOT included (no official DDL found; remaining gap)
 
 
@@ -46,6 +47,7 @@ CREATE TABLE IF NOT EXISTS `oms_tao_goods` (
   `shop_id` int NOT NULL COMMENT '店铺id',
   `erp_goods_id` int DEFAULT NULL COMMENT 'erp商品id',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间(entity)',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_shop_id` (`shop_id`) USING BTREE,
   KEY `idx_num_iid` (`num_iid`) USING BTREE
@@ -70,9 +72,11 @@ CREATE TABLE IF NOT EXISTS `oms_tao_goods_sku` (
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT 'sku状态。	normal',
   `sku_spec_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '表示SKu上的产品规格信息',
   `barcode` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '商品级别的条形码',
-  `o_goods_id` bigint DEFAULT NULL COMMENT '商品id(o_goods外键)',
-  `o_goods_sku_id` bigint DEFAULT NULL COMMENT '商品skuid(o_goods_sku外键)',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间(entity)',
+  `erp_goods_id` bigint DEFAULT NULL COMMENT '商品id(o_goods外键/entity erpGoodsId)',
+  `erp_goods_sku_id` bigint DEFAULT NULL COMMENT '商品skuid(entity erpGoodsSkuId)',
+  `shop_id` bigint DEFAULT NULL COMMENT '店铺id(entity)',
   PRIMARY KEY (`id`) USING BTREE,
   KEY `idx_shop_id` (`shop_id`) USING BTREE,
   KEY `idx_num_iid` (`num_iid`) USING BTREE
