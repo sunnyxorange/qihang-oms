@@ -1,0 +1,19 @@
+# Yize migrations (sunnyxorange/qihang-oms)
+
+## 2026-09-28 — platform / tao missing tables
+
+- `2026-09-28-yize-oms-tao-missing.sql` — all `oms_tao_*` required by Java entities
+- `2026-09-28-yize-platform-missing.sql` — tao + jd/pdd/dou/wei goods tables also missing from seed
+
+**Source**: adapted from upstream-family `zeasin/qihang-cb-erp` `docs/qihang-cb-erp.sql`
+(commit `92899b4f087207042aebc6a0579b8ec6e1753b44`), plus entity columns
+`audit_status` / `audit_time` and indexes for `shop_id` / `tid`.
+
+**Apply (trial MySQL)**:
+
+```bash
+docker exec -i qihang-mysql mysql -uroot -pAndy_123 qihang-oms   < docs/migrations/2026-09-28-yize-platform-missing.sql
+```
+
+No AppKeys / shop tokens / live marketplace data in these files.
+Remaining entity gaps (no official DDL found here): `erp_bill_*`, `o_order_ship_list*`.
